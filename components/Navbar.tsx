@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Sparkles, Palette, LayoutDashboard, Brain, Grid3X3, Rocket, Zap } from 'lucide-react';
+import { Home, Sparkles, Palette, LayoutDashboard, Brain, Grid3X3, Rocket, Zap, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
     { path: '/chroma', label: 'Chroma', icon: Grid3X3 },
     { path: '/galaxy', label: 'Galaxy', icon: Rocket },
     { path: '/warp', label: 'Warp', icon: Zap },
+    { path: '/world', label: 'World', icon: Globe },
 ];
 
 export default function Navbar() {
