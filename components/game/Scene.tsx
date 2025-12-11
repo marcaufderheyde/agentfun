@@ -6,8 +6,7 @@ import { Sky, Stars, KeyboardControls, PerspectiveCamera } from '@react-three/dr
 import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
 import Player from './Player';
 import Ground from './Ground';
-import WorldObjects from './WorldObjects';
-import Collectibles from './Collectibles';
+import InfiniteWorld from './InfiniteWorld';
 import { Suspense } from 'react';
 
 export default function Scene() {
@@ -37,10 +36,7 @@ export default function Scene() {
                     <Physics gravity={[0, -9.81, 0]} defaultContactMaterial={{ friction: 0 }}>
                         <Player />
                         <Ground />
-                        <Player />
-                        <Ground />
-                        <WorldObjects />
-                        <Collectibles />
+                        <InfiniteWorld />
                     </Physics>
                 </Suspense>
 

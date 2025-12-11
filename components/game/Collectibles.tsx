@@ -77,33 +77,4 @@ export function Hazard({ position }: { position: [number, number, number] }) {
     );
 }
 
-export default function Collectibles() {
-    // Generate random positions
-    // Area: -50 to 50
-    const coins = useMemo(() => {
-        return new Array(100).fill(0).map(() => ({
-            position: [
-                (Math.random() - 0.5) * 100,
-                2,
-                (Math.random() - 0.5) * 100
-            ] as [number, number, number]
-        }));
-    }, []);
-
-    const hazards = useMemo(() => {
-        return new Array(30).fill(0).map(() => ({
-            position: [
-                (Math.random() - 0.5) * 100,
-                1,
-                (Math.random() - 0.5) * 100
-            ] as [number, number, number]
-        }));
-    }, []);
-
-    return (
-        <>
-            {coins.map((props, i) => <Coin key={'coin-' + i} position={props.position} />)}
-            {hazards.map((props, i) => <Hazard key={'hazard-' + i} position={props.position} />)}
-        </>
-    );
-}
+// export default function Collectibles() { ... removed }
