@@ -4,10 +4,10 @@ import * as THREE from 'three';
 import { useEffect, useRef } from 'react';
 import { useSphere } from '@react-three/cannon';
 import { useThree, useFrame } from '@react-three/fiber';
-import { useKeyboardControls, PointerLockControls } from '@react-three/drei';
+import { useKeyboardControls, PointerLockControls, PerspectiveCamera } from '@react-three/drei';
 
-const SPEED = 5;
-const JUMP_FORCE = 4;
+const SPEED = 15;
+const JUMP_FORCE = 10;
 
 export default function Player() {
     const { camera } = useThree();
@@ -16,7 +16,10 @@ export default function Player() {
         type: 'Dynamic',
         position: [0, 5, 0],
         fixedRotation: true,
-        linearDamping: 0.95
+        linearDamping: 0.0,
+        angularDamping: 1.0, // Prevent rolling artifacts
+        allowSleep: false,   // Crucial: prevents the body from freezing if it stops moving
+        userData: { tag: 'player' },
     }));
 
     const velocity = useRef([0, 0, 0]);
@@ -27,28 +30,31 @@ export default function Player() {
     useFrame((state) => {
         if (!ref.current) return;
 
-        // Sync camera to player position
-        camera.position.copy(ref.current.position);
-        // Add a little offset if we wanted the camera to be at "head" height, 
-        // but the sphere is radius 1 (default), so center is fine or maybe slightly up.
-        // Actually let's just use the center for now to avoid clipping.
-
         const { forward, backward, left, right, jump } = getKeys();
 
-        // Movement direction derived from camera
-        const frontVector = new THREE.Vector3(0, 0, Number(backward) - Number(forward));
-        const sideVector = new THREE.Vector3(Number(left) - Number(right), 0, 0);
-        const direction = new THREE.Vector3();
+        // FPS Movement Logic
+        // The camera is attached to the mesh. The mesh has fixed rotation.
+        // We need the camera's world direction to know where "forward" is rel to the view.
+        // Even though camera is child of mesh, its world rotation is what matters.
 
-        direction
-            .subVectors(frontVector, sideVector)
-            .normalize()
-            .multiplyScalar(SPEED)
-            .applyEuler(camera.rotation);
+        const fwd = new THREE.Vector3();
+        camera.getWorldDirection(fwd);
+        fwd.y = 0;
+        fwd.normalize();
 
-        api.velocity.set(direction.x, velocity.current[1], direction.z);
+        const rightDir = new THREE.Vector3();
+        rightDir.crossVectors(fwd, camera.up).normalize();
 
-        // Jump
+        const moveX = (Number(right) - Number(left));
+        const moveZ = (Number(forward) - Number(backward));
+
+        const vel = new THREE.Vector3();
+        vel.addScaledVector(fwd, moveZ);
+        vel.addScaledVector(rightDir, moveX);
+        vel.normalize().multiplyScalar(SPEED);
+
+        api.velocity.set(vel.x, velocity.current[1], vel.z);
+
         if (jump && Math.abs(velocity.current[1]) < 0.05) {
             api.velocity.set(velocity.current[0], JUMP_FORCE, velocity.current[2]);
         }
@@ -56,12 +62,15 @@ export default function Player() {
 
     return (
         <>
-            <PointerLockControls />
             <mesh ref={ref as any}>
-                {/* Invisible player sphere for debugging if needed, or remove for total FPV */}
-                {/* <sphereGeometry args={[1, 32, 32]} />
-        <meshStandardMaterial color="orange" /> */}
+                <PerspectiveCamera makeDefault position={[0, 0.5, 0]} />
+                {/* DEBUG NOSE: If this moves, physics moves. If this stays with you, camera is attached. */}
+                <mesh position={[0, 0.5, -1]}>
+                    <boxGeometry args={[0.1, 0.1, 0.1]} />
+                    <meshStandardMaterial color="red" />
+                </mesh>
             </mesh>
+            <PointerLockControls />
         </>
     );
 }

@@ -13,7 +13,7 @@ export default function GalaxyPage() {
     });
 
     return (
-        <main className="min-h-screen relative overflow-hidden bg-black">
+        <main className="min-h-screen relative overflow-hidden">
             {/* UI Overlay */}
             <div className="absolute top-8 left-8 z-10 pointer-events-none">
                 <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-indigo-300 tracking-tight">Galaxy Void</h1>

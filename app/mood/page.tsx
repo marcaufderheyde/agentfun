@@ -1,34 +1,14 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Card from '@/components/Card';
 import { Palette, Check } from 'lucide-react';
-
-const themes = [
-    { name: 'Vivid Default', bg: '#0f172a', accent: '#a855f7' },
-    { name: 'Midnight', bg: '#000000', accent: '#3b82f6' },
-    { name: 'Forest', bg: '#022c22', accent: '#22c55e' },
-    { name: 'Sunset', bg: '#431407', accent: '#f97316' },
-    { name: 'Rose', bg: '#4c0519', accent: '#f43f5e' },
-];
+import { useTheme, themes } from '@/components/ThemeContext';
 
 export default function MoodPage() {
-    const [currentTheme, setCurrentTheme] = useState(themes[0]);
+    const { theme: currentTheme, setTheme } = useTheme();
 
-    // Apply theme to root element
-    useEffect(() => {
-        const root = document.documentElement;
-        // We can interact with the global CSS variables here
-        // But for this demo, we might need a more robust context. 
-        // However, direct modification works for visual proof of concept.
-
-        // Note: This relies on the global CSS using these vars, or we can override specific classes.
-        // Since our original global.css uses hardcoded gradients for .bg-mesh, 
-        // we'll use inline styles on the body or a specific wrapper if we want to change it fully.
-
-        // Let's try to update the blob colors if possible, or just set a new background color override.
-        document.body.style.backgroundColor = currentTheme.bg;
-    }, [currentTheme]);
+    // No need for local effect, the context handles body style injection
 
     return (
         <main className="min-h-screen p-8 md:p-24 flex flex-col items-center justify-center">
@@ -46,7 +26,7 @@ export default function MoodPage() {
                         <Card
                             key={theme.name}
                             className={`cursor-pointer group hover:bg-white/10 relative overflow-hidden transition-all ${currentTheme.name === theme.name ? 'ring-2 ring-white/50 bg-white/10' : ''}`}
-                            onClick={() => setCurrentTheme(theme)}
+                            onClick={() => setTheme(theme)}
                         >
                             <div className="flex items-center space-x-4 relative z-10">
                                 <div

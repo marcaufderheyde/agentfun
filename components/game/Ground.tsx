@@ -10,9 +10,11 @@ export default function Ground() {
 
     return (
         <mesh ref={ref as any} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-            <planeGeometry args={[1000, 1000]} />
-            <meshStandardMaterial color="#333" roughness={0.4} metalness={0.8} />
-            <gridHelper args={[100, 100, 0xff0000, 'teal']} position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} />
+            <planeGeometry args={[2000, 2000]} />
+            {/* Reflective floor */}
+            <meshStandardMaterial color="#000" roughness={0.1} metalness={0.8} />
+            {/* Glowing Grid */}
+            <gridHelper args={[400, 100, '#ff00ff', '#00ffff']} position={[0, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]} />
         </mesh>
     );
 }

@@ -16,8 +16,11 @@ const navItems = [
     { path: '/world', label: 'World', icon: Globe },
 ];
 
+import { useTheme } from './ThemeContext';
+
 export default function Navbar() {
     const pathname = usePathname();
+    const { theme } = useTheme();
 
     return (
         <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
@@ -37,9 +40,13 @@ export default function Navbar() {
                                     layoutId="activeTab"
                                     className="absolute inset-0 bg-white/20 rounded-full"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    style={{ backgroundColor: theme.accent, opacity: 0.5 }}
                                 />
                             )}
-                            <span className={`relative z-10 flex items-center space-x-2 ${isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'}`}>
+                            <span
+                                className={`relative z-10 flex items-center space-x-2 transition-colors`}
+                                style={{ color: isActive ? '#fff' : '#94a3b8' }}
+                            >
                                 <Icon className="w-5 h-5" />
                                 <span className="text-sm font-medium hidden md:inline">{item.label}</span>
                             </span>
